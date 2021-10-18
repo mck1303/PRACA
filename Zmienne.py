@@ -9,14 +9,24 @@ max_z=100
 #Drony
 drones_amount=4
 drones_velocity=0.5 #[m/s]
+drones_safe_zone=(1,1,2)#x,y,z[m] Przestrzeń zapewniająca dronom bezpieczne wzajemne mijanie się z innymi dronami
 drones_list=[]
 
 #Lista pozycji zajmowanych przez drony w poszczególnych etapach
 #Ilosc kolumn równa liczbie dronów. Ilosc rzędów równa ilosci etapów
 position_list=[]
 
+
+def start_positions(number_of_drones):
+    start_positions=[]
+    for i in range(number_of_drones):
+        start_positions.append((i,i,0))
+    return start_positions
+
+
 def random_pos_list(number_of_drones,number_of_parts):
     rand_pos_list=[]
+    rand_pos_list.append(start_positions(number_of_drones))
     for j in range(number_of_parts):
         part_pos_list=[]
         for i in range(number_of_drones):
@@ -33,5 +43,5 @@ def random_pos_list(number_of_drones,number_of_parts):
         rand_pos_list.append(part_pos_list)
     return rand_pos_list
   
-        
+
 
