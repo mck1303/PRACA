@@ -1,0 +1,18 @@
+1.Drones : The Brilliant, the Bad and the Beautiful - A. Miah
+2.Podstawy Fizyki - D. Halliday, R. Resnick, J. Walker
+3.Hybrydowy algorytm tabu dla niepermutacyjnego problemu przepływowego z kryterium sumacyjnym - J. Grabowski, J. Pempera
+4.Algorytm tabu w optymalizacji uogólnionego problemu przydziału - K. Wala
+5.Równoległy algorytm tabu z elementami inspirowanymi naturą dla problemu planowania tras - J. Pempera
+6.Możliwości wykorzystania bezzałogowych platform w służbach ratunkowo-porządkowych - M. Feltynowski, M. Zawistowski
+7.Python na poważnie - J. Danjou
+8.Weather constraints on global drone flyability. - M. Gao, C.H. Hugenholtz, T.A. Fox, M. Kucharczyk, T.E. Barchyn, P.R Nesbit
+9.Drony w inspekcji kolejowych obiektów inżynieryjnych - P. Lesiak
+10.Systemy pomiarowe wykorzystywane w bezzałogowych statkach powietrznych do badania jakości powietrza - K. Cygańczuk, P. Janik
+11.Praca grupy dronów w pobliżu linii najwyższego napięcia - P. Szywalski, A. Waindok, B. Tomczuk
+12.Wykorzystanie bezzałogowych statków powietrznych w świetle prawa międzynarodowego i bezpieczeństwa Polski - P. Maciąg
+13.Bezzałogowe statki powietrzne – geneza, teraźniejszość i przyszłość - P. Bukowski, G. Szala
+14.Legal aspects of air transport safety and the use of drones - D. Tobór, J. Barcik, P. Czech
+15.A mathematical model for controlling a quadrotor UAV - R. Kowalik, T. Łusiak, A. Novak
+16.Algorytm tabu search ze zmiennym czasem pamięci krótkoterminowej - W. Chmiel
+17.A Two-Stage Approach for Routing Multiple Unmanned Aerial Vehicles with Stochastic Fuel Consumption. - S. Venkatachalam, K. Sundar, S. Rathinam
+18.A hybrid job scheduling algorithm based on Tabu and Harmony search algorithms. - H.Alazzam, E. Alhenawi, R. Al-Sayyed
