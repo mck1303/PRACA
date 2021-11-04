@@ -11,6 +11,8 @@ drones_amount=4
 drones_max_velocity=0.5 #[m/s]
 drones_safe_zone=(1,1,2)#x,y,z[m] Przestrzeń zapewniająca dronom bezpieczne wzajemne mijanie się z innymi dronami
 drone_acceleration=0.5 #[m/s^2]
+drone_break_acceleration=1 #[m/s^2]
+drone_breaking_distance=(drones_max_velocity**2)/(2*drone_acceleration)
 sampling_time=1 #[s]
 
 
@@ -27,6 +29,7 @@ class Drone:
         self.position=position
         self.final_position=final_position
         self.velocity=0
+        self.breaking=False
         if self.position!=self.final_position:
             self.is_it_on_final_position=False
         else:
@@ -50,7 +53,10 @@ class Drone:
         
     def change_position(self,new_pos):
         self.position=new_pos
-            
+    
+    def change_break(self,breaking):
+        self.breaking=breaking
+    
 def create_drones(pos_list): #to create Drones
     list_of_drones=[]
     for i in range(drones_amount):
