@@ -10,9 +10,10 @@ max_z=100
 drones_amount=4
 drones_max_velocity=0.5 #[m/s]
 drones_safe_zone=(1,1,2)#x,y,z[m] Przestrzeń zapewniająca dronom bezpieczne wzajemne mijanie się z innymi dronami
-drone_acceleration=0.5 #[m/s^2]
+drone_acceleration=0.25 #[m/s^2]
 drone_break_acceleration=1 #[m/s^2]
-drone_breaking_distance=(drones_max_velocity**2)/(2*drone_acceleration)
+drone_breaking_distance=(drones_max_velocity**2)/(2*drone_break_acceleration)
+drone_max_breaking_time=drones_max_velocity/drone_break_acceleration
 sampling_time=1 #[s]
 
 
@@ -20,6 +21,8 @@ sampling_time=1 #[s]
 amount_of_parts=1
 start_type=1 #starting from: 1-ground, 2- air
 version=1 #version: 1-random, 2-prepared list
+max_error_value=0.5
+
 #Lista pozycji zajmowanych przez drony w poszczególnych etapach
 #Ilosc kolumn równa liczbie dronów. Ilosc rzędów równa ilosci etapów
 
@@ -30,6 +33,7 @@ class Drone:
         self.final_position=final_position
         self.velocity=0
         self.breaking=False
+        self.fly_type=0  #0- brak ruchu 1- przyspieszanie, 2- ruch jednostajny 3- hamowanie
         if self.position!=self.final_position:
             self.is_it_on_final_position=False
         else:
@@ -47,6 +51,7 @@ class Drone:
                 self.is_it_on_final_position=True
     def change_velocity(self,new_vel):
         if new_vel<0:
+            print(self.velocity,new_vel)
             raise ValueError("Wrong velocity")
         else:
             self.velocity=new_vel
@@ -56,6 +61,9 @@ class Drone:
     
     def change_break(self,breaking):
         self.breaking=breaking
+    
+    
+    
     
 def create_drones(pos_list): #to create Drones
     list_of_drones=[]
@@ -94,7 +102,7 @@ def random_pos_list(number_of_drones,number_of_parts,type_of_start_position): #f
             while d==0:
                 d=1
                 
-                part_pos_list.append((nprnd.randint(0,high=max_x),nprnd.randint(0,high=max_y),nprnd.randint(0,high=max_z)))
+                part_pos_list.append((nprnd.randint(1,high=max_x),nprnd.randint(1,high=max_y),nprnd.randint(1,high=max_z)))
                 x,y,z=part_pos_list[-1]
                 for k in range(len(part_pos_list)-1):
                     x1,y1,z1=part_pos_list[k]
