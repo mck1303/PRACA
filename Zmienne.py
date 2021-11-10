@@ -9,7 +9,7 @@ max_z=100
 #Drony
 drones_amount=4
 drones_max_velocity=0.5 #[m/s]
-drones_safe_zone=(1,1,2)#x,y,z[m] Przestrzeń zapewniająca dronom bezpieczne wzajemne mijanie się z innymi dronami
+drones_safe_zone=(1,1,2)#x,y,z[m] Przestrzeń zapewniająca dronom bezpieczne wzajemne mijanie się z innymi dronami (dron jest w centrum strefy)
 drone_acceleration=0.25 #[m/s^2]
 drone_break_acceleration=1 #[m/s^2]
 drone_breaking_distance=(drones_max_velocity**2)/(2*drone_break_acceleration)

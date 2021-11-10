@@ -169,10 +169,33 @@ def simlulation(list_of_allocation,position_list):
         pass
     pass
 
-for i in range(100):
+def colision_detection(list_of_positions):
+    maximum=max([len(i) for i in list_of_positions])
+    for i in range(len(list_of_positions)):
+        if len(list_of_positions[i])<maximum:
+            rem=maximum-len(list_of_positions[i])
+            for j in range (rem):
+                list_of_positions[i].append(list_of_positions[i][-1])
+    colisions=[]
+    for i in range (len(list_of_positions[0])):
+        for j in range(len(list_of_positions)):
+            for k in range(1,len(list_of_positions)-j):
+                x1,y1,z1=list_of_positions[j][i]
+                x2,y2,z2=list_of_positions[j+k][i]
+                if abs(x1-x2)<drones_safe_zone[0]/2 and abs(y1-y2)<drones_safe_zone[1]/2 and abs(z1-z2)<drones_safe_zone[2]/2:
+                    colisions.append((j,list_of_positions[j][i],j+k,list_of_positions[j+k][i]))
+                
+    
+    return colisions
+        
+
+for i in range(1000):
     drones=start()
     X=random_pos_list(drones_amount,1,start_type)
     W=position_change_in_time_for_one_change(X,False)
+    Z=colision_detection(W)
+    if len(Z)>0:
+        raise ValueError("Kolizja")
     for j in range(len(W)):
         if abs(X[1][j][0]-W[j][-1][0])>0.1:
             print("Error ",X[1][j]," ",W[j][-1]," ",X[0][j])
