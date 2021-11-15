@@ -49,7 +49,7 @@ def count_velocity(d:Drone,time):
             return v
 
 
-def position_change_in_time_for_one_change(list_of_allocation_two_rows,multipoints): #do rozszerzenia lista punktów posrednich (dla trajektorii nieliniowej)
+def position_change_in_time_for_one_change(list_of_allocation_two_rows,multipoints=multi): #do rozszerzenia lista punktów posrednich (dla trajektorii nieliniowej)
     list_of_positions_in_time=[]#Każda lista w srodku to kolejne pozycje drona w kolejnej turze (sampling time)
     if multipoints==False:
         for i in range(len(list_of_allocation_two_rows[0])):
@@ -63,33 +63,42 @@ def position_change_in_time_for_one_change(list_of_allocation_two_rows,multipoin
             for j in range(len(traj)-1):
                 d.change_position(traj[j])
                 d.change_final_destination(traj[j+1])
+                drone_points.append(d.position)
                 no_end=True
                 no_max_velocity=False
                 acc=False
                 bre=False
                 normal=False
                 inner_pos=()
+                
+                if (d.velocity*sampling_time)+(drone_acceleration*(sampling_time**2))/2 >= pitagoras(d.position,d.final_position):
+                    no_end=False
+                    print("W1")
+                    d.change_break(False)
+                    distance=pitagoras(d.position,d.final_position)
+                elif d.velocity==0 and no_max_velocity==False and normal==False:
+                    if pitagoras(d.position,d.final_position)<drone_breaking_distance+drone_acceleration_distance:
+                        no_max_velocity=True
+                        print("W2.1")
+                        half_dist=(pitagoras(d.position,d.final_position)*2*drone_acceleration*drone_break_acceleration)/(2*drone_acceleration*(drone_acceleration+drone_break_acceleration))
+                        inner_pos=pitagoras_pos_and_dist(d.position,half_dist,d.final_position)
+                        half_point_velocity=np.sqrt((pitagoras(d.position,d.final_position)*2*drone_acceleration*drone_break_acceleration)/(drone_break_acceleration+drone_acceleration))
+                        acc=True
+                    else:
+                        normal=True
+                        print("W2.2")
                 while no_end:
                     time=time+sampling_time
                     
-                    if (d.velocity*sampling_time)+(drone_acceleration*(sampling_time**2))/2 >= pitagoras(d.position,d.final_position):
-                        no_end=False
-                        distance=pitagoras(d.position,d.final_position)
-                    elif d.velocity==0 and no_max_velocity==False and normal==False:
-                        if pitagoras(d.position,d.final_position)<drone_breaking_distance*2:
-                            no_max_velocity=True
-                            half_dist=pitagoras(d.position,d.final_position)/2
-                            inner_pos=pitagoras_pos_and_dist(d.position,half_dist,d.final_position)
-                            half_point_velocity=drone_acceleration*np.sqrt((2*half_dist)/drone_acceleration)
-                            acc=True
-                        else:
-                            normal=True
-                    elif no_max_velocity:
-                            
+                    
+                    if no_max_velocity:
+                        print("Z1")    
                         if acc:
                             distance=(d.velocity*sampling_time)+(drone_acceleration*(sampling_time**2))/2 
                             if distance<half_dist:
                                 d.change_velocity(d.velocity+(drone_acceleration*sampling_time))
+                                half_dist=half_dist-distance
+                                print("Z2")
                             else:
                                 acc=False
                                 bre=True
@@ -97,17 +106,23 @@ def position_change_in_time_for_one_change(list_of_allocation_two_rows,multipoin
                                 time_a=((half_point_velocity-d.velocity)/drone_acceleration)
                                 time_b=sampling_time-time_a
                                 distance_b=(half_point_velocity*time_b)-(drone_break_acceleration*(time_b**2))/2
+                                
                                 d.change_velocity(half_point_velocity-(drone_break_acceleration*time_b))
+                                distance=distance_a + distance_b
+                                print("Z3")
                         elif bre:
                             distance=(d.velocity*sampling_time)-(drone_break_acceleration*(sampling_time**2))/2
-                            if distance<0 or distance>pitagoras(d.position,d.final_position):
+                            if distance<0 or distance+max_error_value>pitagoras(d.position,d.final_position):
                                 distance=pitagoras(d.position,d.final_position)
                                 d.change_velocity(0)
                                 no_end=False
                                 bre=False
-                                
+                                d.change_break(False)
+                                print("Z4")
                             else:
+            
                                 d.change_velocity(d.velocity-(drone_break_acceleration*sampling_time))
+                                print("Z5")
         
                             
                     if normal:
@@ -122,10 +137,11 @@ def position_change_in_time_for_one_change(list_of_allocation_two_rows,multipoin
                                     distance=pitagoras(d.position,d.final_position)
                                     d.change_velocity(0)
                                     no_end=False
-                                
+                                    d.change_break(False)
+                                    print("Z6")
                                 else:
                                     d.change_velocity(d.velocity-(drone_break_acceleration*(sampling_time-r_time)))
-                        
+                                    print("Z7")
                         else:
                             
                             if d.breaking==False: #dron przyspiesza
@@ -137,9 +153,11 @@ def position_change_in_time_for_one_change(list_of_allocation_two_rows,multipoin
                                     f_time=sampling_time-ac_time
                                     distance=((d.velocity*ac_time)+(drone_acceleration*(ac_time**2))/2) +(drones_max_velocity*f_time)
                                     d.change_velocity(drones_max_velocity)
+                                    print("Z8")
                                 else:
                                     distance=(d.velocity*sampling_time)+(drone_acceleration*(sampling_time**2))/2 
                                     d.change_velocity(d.velocity+(drone_acceleration*sampling_time))
+                                    print("Z9")
                                     
                             elif d.breaking==True: #dron hamuje
                                 distance=(d.velocity*sampling_time)-(drone_break_acceleration*(sampling_time**2))/2
@@ -147,11 +165,12 @@ def position_change_in_time_for_one_change(list_of_allocation_two_rows,multipoin
                                     distance=pitagoras(d.position,d.final_position)
                                     d.change_velocity(0)
                                     no_end=False
+                                    d.change_break(False)
+                                    print("Z10")
                                 else:
                                     d.change_velocity(d.velocity-(drone_break_acceleration*sampling_time))
-                                
+                                    print("Z11")
                         
-                    
                     next_pos=pitagoras_pos_and_dist(d.position, distance, d.final_position)
                     drone_points.append(next_pos)
                     d.change_position(next_pos)
@@ -189,13 +208,13 @@ def colision_detection(list_of_positions):
     return colisions
         
 
-for i in range(1000):
-    drones=start()
-    X=random_pos_list(drones_amount,1,start_type)
-    W=position_change_in_time_for_one_change(X,False)
-    Z=colision_detection(W)
-    if len(Z)>0:
-        raise ValueError("Kolizja")
-    for j in range(len(W)):
-        if abs(X[1][j][0]-W[j][-1][0])>0.1:
-            print("Error ",X[1][j]," ",W[j][-1]," ",X[0][j])
+# for i in range(1000):
+#     drones=start()
+#     X=random_pos_list(drones_amount,1,start_type)
+#     W=position_change_in_time_for_one_change(X)
+#     Z=colision_detection(W)
+#     if len(Z)>0:
+#         raise ValueError("Kolizja")
+#     for j in range(len(W)):
+#         if abs(X[1][j][0]-W[j][-1][0])>0.1:
+#             print("Error ",X[1][j]," ",W[j][-1]," ",X[0][j])

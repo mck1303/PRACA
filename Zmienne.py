@@ -8,10 +8,11 @@ max_z=100
 
 #Drony
 drones_amount=4
-drones_max_velocity=0.5 #[m/s]
+drones_max_velocity=10 #[m/s]
 drones_safe_zone=(1,1,2)#x,y,z[m] Przestrzeń zapewniająca dronom bezpieczne wzajemne mijanie się z innymi dronami (dron jest w centrum strefy)
 drone_acceleration=0.25 #[m/s^2]
 drone_break_acceleration=1 #[m/s^2]
+drone_acceleration_distance=(drones_max_velocity**2)/(2*drone_acceleration)
 drone_breaking_distance=(drones_max_velocity**2)/(2*drone_break_acceleration)
 drone_max_breaking_time=drones_max_velocity/drone_break_acceleration
 sampling_time=1 #[s]
@@ -21,7 +22,12 @@ sampling_time=1 #[s]
 amount_of_parts=1
 start_type=1 #starting from: 1-ground, 2- air
 version=1 #version: 1-random, 2-prepared list
-max_error_value=0.5
+max_error_value=0.1
+multi=False
+
+#Algorytm
+d_alfa=0.5
+tabu_length=4
 
 #Lista pozycji zajmowanych przez drony w poszczególnych etapach
 #Ilosc kolumn równa liczbie dronów. Ilosc rzędów równa ilosci etapów
@@ -41,7 +47,7 @@ class Drone:
 
     def change_final_destination(self,new_final_position):
         if new_final_position==self.final_position:
-            print("New position is not new")
+            pass
         else:
             if self.position!=new_final_position:
                 self.final_position=new_final_position
@@ -73,9 +79,10 @@ def create_drones(pos_list): #to create Drones
 
 def start(prepared_pos: Optional[List]=None): 
         if version==1:
-            return create_drones(random_pos_list(drones_amount,amount_of_parts,start_type))
+            pos_list=random_pos_list(drones_amount,amount_of_parts,start_type)
+            return (create_drones(pos_list),pos_list)
         elif version==2:
-            return create_drones(prepared_pos)
+            return (create_drones(prepared_pos),prepared_pos)
         else:
             raise ValueError("Wrong version in start")
     
@@ -112,4 +119,4 @@ def random_pos_list(number_of_drones,number_of_parts,type_of_start_position): #f
     return rand_pos_list
   
 
-drones=start()
+drones, positions=start()
