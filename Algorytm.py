@@ -4,18 +4,16 @@ from Zmienne import *
 from Symulacja import *
 
 def fc(positions_in_time):
-    colis=colision_detection(positions_in_time)
-    fc=len(positions_in_time[0])+(1000*len(colis))
+    colis, time=colision_detection(positions_in_time)
+    fc=time+(1000*len(colis))
     return fc
 
 def fc_d(positions_in_time,d_tabu,it):
-    colis=colision_detection(positions_in_time)
+    colis, time=colision_detection(positions_in_time)
     if it==0: 
         it=1
-    print((d_alfa*d_tabu)/it)
-    fc=len(positions_in_time[0])+(1000*len(colis))+(d_alfa*d_tabu)/it
+    fc=time+(1000*len(colis))+(d_alfa*d_tabu)/it
     return fc
-        
 
 def algorithm(list_of_positions,type_of_algorithm): #1-p. krótkoterminowa, 2-p. długoterminowa
     if type_of_algorithm==1:
@@ -54,16 +52,15 @@ def algorithm(list_of_positions,type_of_algorithm): #1-p. krótkoterminowa, 2-p.
                             Q_tabu=Q
                             posit_tabu=inside_l
                             
-            if Q_best>Q_min:
+            if Q_best>=Q_min:
                 Q_best=Q_min
                 result=posit
                 list_of_positions=posit
                 k_tabu_list[i][j]=tabu_length+1
                 k_tabu_list[j][i]=tabu_length+1
-                print(k_tabu_list)
 
                 
-            elif Q_best>Q_tabu:
+            elif Q_best>=Q_tabu:
                 Q_best=Q_tabu
                 result=posit_tabu
                 list_of_positions=posit
@@ -122,7 +119,7 @@ def algorithm(list_of_positions,type_of_algorithm): #1-p. krótkoterminowa, 2-p.
                             Q_tabu=Q
                             posit_tabu=inside_l
                             
-            if Q_best>Q_min:
+            if Q_best>=Q_min:
                 Q_best=Q_min
                 result=posit
                 list_of_positions=posit
@@ -132,7 +129,7 @@ def algorithm(list_of_positions,type_of_algorithm): #1-p. krótkoterminowa, 2-p.
                 d_tabu_list[j][i]+=1
 
                 
-            elif Q_best>Q_tabu:
+            elif Q_best>=Q_tabu:
                 Q_best=Q_tabu
                 result=posit_tabu
                 list_of_positions=posit
@@ -147,7 +144,6 @@ def algorithm(list_of_positions,type_of_algorithm): #1-p. krótkoterminowa, 2-p.
                 k_tabu_list[j][i]=tabu_length+1
                 d_tabu_list[i][j]+=1
                 d_tabu_list[j][i]+=1
-                print(k_tabu_list)
                 
             for o in range(drones_amount):
                 for p in range(drones_amount):

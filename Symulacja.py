@@ -206,7 +206,7 @@ def colision_detection(list_of_positions):
                     colisions.append((j,list_of_positions[j][i],j+k,list_of_positions[j+k][i]))
                 
     
-    return colisions
+    return colisions, maximum
         
 
 # for i in range(1000):
