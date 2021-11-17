@@ -7,7 +7,7 @@ max_y=100
 max_z=100
 
 #Drony
-drones_amount=4
+drones_amount=10
 drones_max_velocity=10 #[m/s]
 drones_safe_zone=(1,1,2)#x,y,z[m] Przestrzeń zapewniająca dronom bezpieczne wzajemne mijanie się z innymi dronami (dron jest w centrum strefy)
 drone_acceleration=0.25 #[m/s^2]
@@ -22,7 +22,7 @@ sampling_time=1 #[s]
 amount_of_parts=1
 start_type=1 #starting from: 1-ground, 2- air
 version=1 #version: 1-random, 2-prepared list
-max_error_value=0.1
+max_error_value=0.2
 multi=False
 
 #Algorytm
