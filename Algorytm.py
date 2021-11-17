@@ -12,7 +12,8 @@ def fc_d(positions_in_time,d_tabu,it):
     colis=colision_detection(positions_in_time)
     if it==0: 
         it=1
-    fc=len(positions_in_time[0])+(1000*len(colis))+(d_alfa*it)/it
+    print((d_alfa*d_tabu)/it)
+    fc=len(positions_in_time[0])+(1000*len(colis))+(d_alfa*d_tabu)/it
     return fc
         
 
@@ -89,7 +90,7 @@ def algorithm(list_of_positions,type_of_algorithm): #1-p. krótkoterminowa, 2-p.
         go_on=True
         k_tabu_list=np.zeros((drones_amount,drones_amount))
         d_tabu_list=np.zeros((drones_amount,drones_amount))
-        Q_best=fc_d(it_list,d_tabu_list,0)
+        Q_best=fc_d(it_list,0,0)
         result=list_of_positions
         iteration=0
         fc_list=[]
